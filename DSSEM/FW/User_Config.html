@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DSSEM: User Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 550px;
+            width: 100%;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #005a9e;
+            border-bottom: 2px solid #005a9e;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 5px;
+        }
+
+            .input-group input {
+                flex: 2;
+            }
+
+            .input-group select {
+                flex: 1;
+            }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0078D7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+
+            button:hover {
+                background: #005A9E;
+            }
+
+            button:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+
+        .status-box {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            background: #ffebee;
+            color: #d8000c;
+        }
+
+        .connected {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        #terminal {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 10px;
+            height: 120px;
+            overflow-y: auto;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            border: 2px inset #555;
+        }
+
+        .calc-panel {
+            background: #e6ffe6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #b3ffb3;
+        }
+
+            .calc-panel h3 {
+                margin-top: 0;
+                margin-bottom: 10px;
+                color: #006600;
+                font-size: 16px;
+            }
+
+        .guide-panel {
+            background: #fff9db;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #ffe066;
+            overflow: hidden;
+        }
+
+            .guide-panel summary {
+                padding: 15px;
+                font-weight: bold;
+                color: #d97706;
+                font-size: 15px;
+                cursor: pointer;
+                list-style: none;
+                outline: none;
+                display: flex;
+                align-items: center;
+                transition: background 0.2s;
+            }
+
+                .guide-panel summary::-webkit-details-marker {
+                    display: none;
+                }
+
+                .guide-panel summary:before {
+                    margin-right: 10px;
+                    font-size: 18px;
+                }
+
+                .guide-panel summary:after {
+                    content: '+';
+                    margin-left: auto;
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+
+            .guide-panel[open] summary:after {
+                content: '−';
+            }
+
+            .guide-panel summary:hover {
+                background: #fff3bf;
+            }
+
+        .guide-content {
+            padding: 0 15px 15px 15px;
+            border-top: 1px solid #ffe066;
+        }
+
+            .guide-content ol {
+                margin: 10px 0 0 0;
+                padding-left: 20px;
+                font-size: 13px;
+                color: #5c5f66;
+            }
+
+            .guide-content li {
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+        @media print {
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .container {
+                box-shadow: none !important;
+                margin: 0 auto !important;
+                padding: 15px 30px !important;
+                transform: scale(0.9);
+                transform-origin: top center;
+            }
+
+            .form-group {
+                margin-bottom: 8px !important;
+            }
+
+            #terminal {
+                height: 75px !important;
+                margin-bottom: 10px !important;
+            }
+            button {
+                padding: 8px !important;
+                margin-top: 10px !important;
+            }
+
+            .calc-panel {
+                margin-top: 10px !important;
+                padding: 12px !important;
+            }
+
+            .guide-panel {
+                margin-top: 10px !important;
+            }
+
+            .guide-content {
+                padding-bottom: 10px !important;
+            }
+
+                .guide-content li {
+                    margin-bottom: 4px !important;
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>DSSEM User Configuration</h2>
+
+        <div id="statusBox" class="status-box">Serial port disconnected</div>
+        <button id="connectBtn">Connect via USB (Choose COM port)</button>
+
+        <div style="margin-top: 20px;">
+            <label>Messages from device (Terminal):</label>
+            <div id="terminal">Waiting for connection...</div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Device ID:</label>
+                    <input type="text" id="devid" placeholder="" maxlength="15">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>APN:</label>
+                    <input type="text" id="apn" placeholder="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Server IP address:</label>
+                <input type="text" id="ip" placeholder="">
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Server Port:</label>
+                    <input type="number" id="port" placeholder="">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Local Port:</label>
+                    <input type="number" id="lport" placeholder="">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Measurement interval:</label>
+                    <div class="input-group">
+                        <input type="number" id="meas_val" placeholder="">
+                        <select id="meas_unit">
+                            <option value="1">Seconds</option>
+                            <option value="60" selected>Minutes</option>
+                            <option value="3600">Hours</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Transmission interval:</label>
+                    <div class="input-group">
+                        <input type="number" id="tx_val" placeholder="">
+                        <select id="tx_unit">
+                            <option value="1">Seconds</option>
+                            <option value="60">Minutes</option>
+                            <option value="3600" selected>Hours</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Battery Capacity [mAh]:</label>
+                <input type="number" id="batCapacity" placeholder="">
+            </div>
+
+            <button id="sendBtn" disabled>Save Configuration to Device</button>
+        </div>
+
+        <div class="calc-panel">
+            <h3>Battery Life Estimation:</h3>
+            <p style="margin: 0;">Estimated lifespan: <b id="battLife" style="font-size: 18px; color: #006600;">...</b> <b>days</b></p>
+            <small style="color: #555;">(Calculated for average consumption without solar charging)</small>
+        </div>
+
+        <!-- VYSOUVACÍ NÁVOD -->
+        <details class="guide-panel" open>
+            <summary>Show User Guide</summary>
+            <div class="guide-content">
+                <ol>
+                    <li>Connect the device to your computer via a USB-to-UART adapter.</li>
+                    <li>Click the <b>Connect via USB</b> button and select the appropriate COM port.</li>
+                    <li>Fill in the configuration data (Device ID, APN, Server IP, etc.).</li>
+                    <li>Check the estimated battery life in the green panel.</li>
+                    <li>Reset the device to initialize serial communication.</li>
+                    <li>Click <b>Save Configuration to Device</b> to store parameters in the device's memory.</li>
+                    <li>You can monitor the configuration progress in the black terminal window.</li>
+                </ol>
+            </div>
+        </details>
+    </div>
+
+    <script>
+        let port;
+        let writer;
+
+        async function readLoop(port) {
+            const textDecoder = new TextDecoderStream();
+            const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+            const reader = textDecoder.readable.getReader();
+            const terminal = document.getElementById('terminal');
+
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    if (value) {
+                        terminal.textContent += value;
+                        terminal.scrollTop = terminal.scrollHeight;
+                    }
+                }
+            } catch (error) {
+                console.error("Read error:", error);
+            } finally {
+                reader.releaseLock();
+            }
+        }
+
+        document.getElementById('connectBtn').addEventListener('click', async () => {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 115200 });
+
+                const statusBox = document.getElementById('statusBox');
+                statusBox.innerText = "Connected! Turn on or reset the sensor.";
+                statusBox.className = "status-box connected";
+
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('connectBtn').style.display = "none";
+                document.getElementById('terminal').textContent = "";
+
+                const textEncoder = new TextEncoderStream();
+                const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
+                writer = textEncoder.writable.getWriter();
+
+                readLoop(port);
+
+            } catch (err) {
+                alert("Connection error: " + err.message);
+            }
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', async () => {
+            if (!writer) return;
+            const devid = document.getElementById('devid').value || "Sensor_X";
+            const apn = document.getElementById('apn').value || "internet";
+            const ip = document.getElementById('ip').value || "0.0.0.0";
+            const portNum = document.getElementById('port').value || "5000";
+            const lportNum = document.getElementById('lport').value || "5001";
+
+            const measVal = parseInt(document.getElementById('meas_val').value) || 15;
+            const txVal = parseInt(document.getElementById('tx_val').value) || 24;
+            const measSec = measVal * parseInt(document.getElementById('meas_unit').value);
+            const txSec = txVal * parseInt(document.getElementById('tx_unit').value);
+
+            const command = `CFG:${apn},${ip},${portNum},${lportNum},${devid},${measSec},${txSec}\n`;
+
+            try {
+                await writer.write(command);
+                document.getElementById('terminal').textContent += `\n> SENT: ${command}`;
+                document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
+            } catch (err) {
+                alert("Write error: " + err);
+            }
+        });
+
+        function updateCalc() {
+            const measInput = parseInt(document.getElementById('meas_val').value);
+            const txInput = parseInt(document.getElementById('tx_val').value);
+            const batCapacity = parseFloat(document.getElementById('batCapacity').value);
+
+            if (isNaN(measInput) || isNaN(txInput) || measInput <= 0 || txInput <= 0 || !batCapacity) {
+                document.getElementById('battLife').innerText = "...";
+                return;
+            }
+
+            const measIntMin = (measInput * parseInt(document.getElementById('meas_unit').value)) / 60;
+            const txIntMin = (txInput * parseInt(document.getElementById('tx_unit').value)) / 60;
+
+            const t_Meas = 22.83;
+            const I_Meas = 8.14;
+            const t_Attach = 7.50;
+            const I_Attach = 17.33;
+            const t_Tx = 10.80;
+            const I_Tx = 15.57;
+            const t_Powd = 23.79;
+            const I_Powd = 5.41;
+            const I_Sleep = 0.066;
+
+            const N_Meas = 1440 / measIntMin;
+            const N_NBIoT = 1440 / txIntMin;
+            const N_Pkt = Math.ceil(txIntMin / measIntMin);
+
+            const Q_Meas = N_Meas * t_Meas * I_Meas;
+            const q_Ses = (t_Attach * I_Attach) + (N_Pkt * t_Tx * I_Tx) + (t_Powd * I_Powd);
+            const Q_NBIoT = N_NBIoT * q_Ses;
+
+            const t_Active = (N_Meas * t_Meas) + N_NBIoT * (t_Attach + (N_Pkt * t_Tx) + t_Powd);
+            const Q_Sleep = Math.max(0, (86400 - t_Active)) * I_Sleep;
+
+            const Q_Day = Q_Meas + Q_NBIoT + Q_Sleep;
+            const C_Day_mAh = Q_Day / 3600;
+
+            const days = Math.floor(batCapacity / C_Day_mAh);
+
+            document.getElementById('battLife').innerText = isNaN(days) ? "..." : days;
+        }
+
+        const inputs = ['meas_val', 'meas_unit', 'tx_val', 'tx_unit', 'batCapacity'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', updateCalc);
+            document.getElementById(id).addEventListener('change', updateCalc);
+        });
+
+        updateCalc();
+    </script>
+</body>
+</html>
